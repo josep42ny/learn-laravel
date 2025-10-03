@@ -1,26 +1,20 @@
 <?php
 
-$books = [
-  [
-    "name" => "Do Androids Dream of Electric Sheep?",
-    "author" => "Philip K. Dick",
-    "releaseYear" => 1968,
-    "purchaseUrl" => "https://example.com/androids-dream"
-  ],
-  [
-    "name" => "Project Hail Mary",
-    "author" => "Andy Weir",
-    "releaseYear" => 2021,
-    "purchaseUrl" => "https://example.com/hail-mary"
-  ],
-  [
-    "name" => "The Martian",
-    "author" => "Andy Weir",
-    "releaseYear" => 2011,
-    "purchaseUrl" => "https://example.com/hail-mary"
-  ],
+use const Dom\NOT_FOUND_ERR;
+
+require 'functions.php';
+
+$url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+$routes = [
+  '/' => 'controllers/home.php',
+  '/contact' => 'controllers/contact.php',
+  '/about' => 'controllers/about.php',
 ];
 
-$filteredBooks = array_filter($books, fn($book) => $book['releaseYear'] > 2000);
-
-require "index.view.php";
+if (array_key_exists($url, $routes)) {
+  require $routes[$url];
+} else {
+  http_response_code(404);
+  require 'views/404.php';
+}
