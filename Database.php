@@ -2,19 +2,16 @@
 
 class Database
 {
-  private string $prefix = 'mysql';
-  private string $host = '127.0.0.1';
-  private string $port = '3306';
-  private string $dbname = 'myapp';
-  private string $charset = 'latin1';
   private string $user = 'root';
   private string $password = 'mariadb';
   private PDO $pdo;
 
-  public function __construct()
+  public function __construct($config)
   {
-    $dsn = "{$this->prefix}:host={$this->host};port={$this->port};dbname={$this->dbname};charset={$this->charset}";
-    $this->pdo = new PDO($dsn, $this->user, $this->password);
+    $dsn = 'mysql:' . http_build_query($config, '', ';');
+    $this->pdo = new PDO($dsn, $this->user, $this->password, [
+      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
   }
 
   public function query($query): PDOStatement
