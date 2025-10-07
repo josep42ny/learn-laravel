@@ -6,6 +6,11 @@ $config = require 'config.php';
 //require 'router.php';
 
 $db = new Database($config['database']);
-$post = $db->query('select * from posts where id = 2')->fetch(PDO::FETCH_ASSOC);
+
+$query = 'select * from posts where id = :id';
+$params = [
+  ':id' => $_GET['id'],
+];
+$post = $db->query($query, $params)->fetch();
 
 echo "<li>{$post['title']}</li>";
