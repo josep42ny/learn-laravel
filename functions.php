@@ -14,12 +14,13 @@ function uriIs($var)
   return $_SERVER['REQUEST_URI'] === $var;
 }
 
-function abort($statusCode = 404)
+function abort($statusCode = HttpResponse::NOT_FOUND)
 {
-  http_response_code(404);
+  http_response_code($statusCode);
   require "views/{$statusCode}.php";
   die();
 }
+
 function routeToController($url, $routes)
 {
   if (array_key_exists($url, $routes)) {

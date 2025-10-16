@@ -4,13 +4,23 @@ $heading = "Note";
 $config = require('./config.php');
 $db = new Database($config['database']);
 
-$uid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+$nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
 $note = $db->query(
-  'select * from Note where id = :uid',
+  'select * from Note where id = :nid',
   [
-    'uid' => $uid,
+    'nid' => $nid,
   ],
 )->fetch();
+
+if (!$note) {
+  abort(HttpResponse::NOT_FOUND);
+}
+
+$authorisedUser = 1;
+
+if ($note['userId'] !== $authorisedUser) {
+  abort(HttpResponse::FORBIDDEN);
+}
 
 require "views/note.view.php";
