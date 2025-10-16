@@ -1,5 +1,6 @@
 <?php
 $heading = "Note";
+$authorisedUser = 1;
 
 $config = require('./config.php');
 $db = new Database($config['database']);
@@ -11,16 +12,8 @@ $note = $db->query(
   [
     'nid' => $nid,
   ],
-)->fetch();
+)->getOrFail();
 
-if (!$note) {
-  abort(HttpResponse::NOT_FOUND);
-}
-
-$authorisedUser = 1;
-
-if ($note['userId'] !== $authorisedUser) {
-  abort(HttpResponse::FORBIDDEN);
-}
+authorise($note['userId'] === 1);
 
 require "views/note.view.php";

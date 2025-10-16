@@ -3,6 +3,7 @@
 class Database
 {
   private PDO $pdo;
+  private PDOStatement $statement;
 
   public function __construct($config, $user = 'root', $password = 'mariadb')
   {
@@ -12,11 +13,32 @@ class Database
     ]);
   }
 
-  public function query($query, $params = []): PDOStatement
+  public function query($query, $params = []): Database
   {
-    $statement = $this->pdo->prepare($query);
-    $statement->execute($params);
+    $this->statement = $this->pdo->prepare($query);
+    $this->statement->execute($params);
 
-    return $statement;
+    return $this;
+  }
+
+  public function get(): mixed
+  {
+    return $this->statement->fetch();
+  }
+
+  public function getAll(): mixed
+  {
+    return $this->statement->fetchAll();
+  }
+
+  public function getOrFail(): mixed
+  {
+    $result = $this->get();
+
+    if (!$result) {
+      abort(HttpResponse::NOT_FOUND);
+    }
+
+    return $result;
   }
 }

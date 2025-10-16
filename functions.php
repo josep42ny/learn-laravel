@@ -21,6 +21,13 @@ function abort($statusCode = HttpResponse::NOT_FOUND)
   die();
 }
 
+function authorise($criteria, $response = HttpResponse::FORBIDDEN): void
+{
+  if (!$criteria) {
+    abort($response);
+  }
+}
+
 function routeToController($url, $routes)
 {
   if (array_key_exists($url, $routes)) {
