@@ -1,16 +1,15 @@
 <?php
 
-require './Validator.php';
+require baseUrl('Validator.php');
 
-$heading = "Create new note";
-$config = require('./config.php');
+$config = require(baseUrl('config.php'));
 $db = new Database($config['database']);
+$errors = [
+  'title' => [],
+  'body' => [],
+];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $errors = [
-    'title' => [],
-    'body' => [],
-  ];
 
   if (!Validator::string($_POST['title'], 1, 50)) {
     array_push($errors['title'], 'Invalid title lenght.');
@@ -37,4 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-require "views/notes/create.view.php";
+view('notes/create.view.php', [
+  'heading' => 'Create a note',
+  'errors' => $errors,
+]);

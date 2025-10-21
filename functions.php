@@ -36,3 +36,14 @@ function routeToController($url, $routes)
     abort();
   }
 }
+
+function baseUrl($path): string
+{
+  return BASE_PATH . $path;
+}
+
+function view($path, $attributes = [])
+{
+  extract($attributes);
+  require baseUrl('views/' . $path);
+}
