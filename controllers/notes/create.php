@@ -1,6 +1,7 @@
 <?php
 
-require baseUrl('Validator.php');
+use Core\Validator;
+use Core\Database;
 
 $config = require(baseUrl('config.php'));
 $db = new Database($config['database']);

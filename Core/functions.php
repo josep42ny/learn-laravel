@@ -1,5 +1,7 @@
 <?php
 
+use Core\HttpResponse;
+
 function dd($var)
 {
   echo '
@@ -31,7 +33,7 @@ function authorise($criteria, $response = HttpResponse::FORBIDDEN): void
 function routeToController($url, $routes)
 {
   if (array_key_exists($url, $routes)) {
-    require $routes[$url];
+    require baseUrl($routes[$url]);
   } else {
     abort();
   }

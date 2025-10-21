@@ -1,4 +1,7 @@
 <?php
+
+use Core\Database;
+
 $authorisedUser = 1;
 
 $config = require(baseUrl('config.php'));
