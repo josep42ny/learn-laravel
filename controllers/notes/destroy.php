@@ -1,11 +1,10 @@
 <?php
 
+use Core\App;
 use Core\Database;
 
+$db = App::resolve(Database::class);
 $authorisedUser = 1;
-
-$config = require(baseUrl('config.php'));
-$db = new Database($config['database']);
 
 $note = $db->query('select * from Note where id = :id', [
   'id' => $_POST['id'],

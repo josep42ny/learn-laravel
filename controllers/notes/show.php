@@ -1,11 +1,10 @@
 <?php
 
+use Core\App;
 use Core\Database;
 
+$db = App::resolve(Database::class);
 $authorisedUser = 1;
-
-$config = require(baseUrl('config.php'));
-$db = new Database($config['database']);
 
 $nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
