@@ -19,7 +19,7 @@ function uriIs($var)
 function abort($statusCode = HttpResponse::NOT_FOUND)
 {
   http_response_code($statusCode);
-  require "views/{$statusCode}.php";
+  require baseUrl("views/{$statusCode}.php");
   die();
 }
 

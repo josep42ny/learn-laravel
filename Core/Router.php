@@ -26,9 +26,9 @@ class Router
     $this->add('GET', $uri, $controller);
   }
 
-  public function put($uri, $controller): void
+  public function patch($uri, $controller): void
   {
-    $this->add('PUT', $uri, $controller);
+    $this->add('PATCH', $uri, $controller);
   }
 
   public function post($uri, $controller): void
