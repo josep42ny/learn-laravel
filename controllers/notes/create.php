@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'body' => $_POST['body'],
       'uid' => 1
     ]);
+
+    header('location: /notes');
   }
 }
 

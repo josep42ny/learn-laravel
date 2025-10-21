@@ -30,15 +30,6 @@ function authorise($criteria, $response = HttpResponse::FORBIDDEN): void
   }
 }
 
-function routeToController($url, $routes)
-{
-  if (array_key_exists($url, $routes)) {
-    require baseUrl($routes[$url]);
-  } else {
-    abort();
-  }
-}
-
 function baseUrl($path): string
 {
   return BASE_PATH . $path;
