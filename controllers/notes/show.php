@@ -16,4 +16,4 @@ $note = $db->query(
 
 authorise($note['userId'] === 1);
 
-require "views/note.view.php";
+require "views/notes/show.view.php";
