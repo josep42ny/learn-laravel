@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\Middleware\Middleware;
+
 class Router
 {
   private $routes = [];
@@ -10,34 +12,43 @@ class Router
   {
     foreach ($this->routes as $route) {
       if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
+        Middleware::resolve($route['middleware']);
         return require baseUrl($route['controller']);
       }
     }
     abort();
   }
 
-  private function add($method, $uri, $controller): void
+  public function only($key)
   {
-    $this->routes[] = compact('method', 'uri', 'controller');
+    $this->routes[array_key_last($this->routes)]['middleware'] = $key;
+    return $this;
   }
 
-  public function get($uri, $controller): void
+  private function add($method, $uri, $controller): Router
   {
-    $this->add('GET', $uri, $controller);
+    $middleware = null;
+    $this->routes[] = compact('method', 'uri', 'controller', 'middleware');
+    return $this;
   }
 
-  public function patch($uri, $controller): void
+  public function get($uri, $controller): Router
   {
-    $this->add('PATCH', $uri, $controller);
+    return $this->add('GET', $uri, $controller);
   }
 
-  public function post($uri, $controller): void
+  public function patch($uri, $controller): Router
   {
-    $this->add('POST', $uri, $controller);
+    return $this->add('PATCH', $uri, $controller);
   }
 
-  public function delete($uri, $controller): void
+  public function post($uri, $controller): Router
   {
-    $this->add('DELETE', $uri, $controller);
+    return $this->add('POST', $uri, $controller);
+  }
+
+  public function delete($uri, $controller): Router
+  {
+    return $this->add('DELETE', $uri, $controller);
   }
 }
