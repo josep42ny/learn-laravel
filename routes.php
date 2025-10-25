@@ -16,3 +16,6 @@ $router->patch('/notes', 'controllers/notes/update.php');
 $router->get('/contact', 'controllers/contact.php');
 
 $router->get('/about', 'controllers/about.php');
+
+$router->get('/register', 'controllers/registration/create.php');
+$router->post('/register', 'controllers/registration/store.php');

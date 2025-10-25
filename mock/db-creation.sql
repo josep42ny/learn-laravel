@@ -3,8 +3,8 @@ use myapp;
 
 create table User (
   id int unsigned auto_increment primary key,
-  firstName varchar(255) not null,
-  email varchar(255) not null unique
+  email varchar(255) not null unique,
+  password varchar(255) not null
 );
 
 create table Note (
@@ -16,9 +16,9 @@ create table Note (
   on delete cascade on update cascade
 );
 
-insert into User (firstName, email) values
-('John', 'john@example.com'),
-('Kate', 'kate@example.com');
+insert into User (email, password) values
+('john@example.com', 'johnpass1234'),
+('kate@example.com', 'katespass1234');
 
 insert into Note (userId, title, body) values
 (1, 'Ideas for next vacation', 'Asperiores et voluptas qui temporibus. Aperiam dolor similique et et vel voluptatem molestiae illo. Enim sed maxime repudiandae officia voluptatibus deleniti. Aut voluptatem provident et sed earum laudantium tempore.'),
