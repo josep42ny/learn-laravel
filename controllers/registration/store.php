@@ -6,6 +6,7 @@ use Core\Validator;
 
 $email = $_POST['email'];
 $password = $_POST['password'];
+$errors = [];
 
 if (!Validator::email($email)) {
   $errors['email'] = ['Provide a valid email address.'];
@@ -22,11 +23,11 @@ if (!empty($errors)) {
 }
 
 $db = App::resolve(Database::class);
-$result = $db->query('select * from User where email like :email', [
+$user = $db->query('select * from User where email like :email', [
   'email' => $email
 ])->get();
 
-if ($result) {
+if ($user) {
   header('location: /');
   exit();
 } else {
@@ -35,9 +36,9 @@ if ($result) {
     'password' => password_hash($password, PASSWORD_BCRYPT)
   ]);
 
-  $_SESSION['user'] = [
+  login([
     'email' => $email
-  ];
+  ]);
 
   header('location: /');
   exit();
