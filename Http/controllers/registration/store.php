@@ -27,10 +27,7 @@ $user = $db->query('select * from User where email like :email', [
   'email' => $email
 ])->get();
 
-if ($user) {
-  header('location: /');
-  exit();
-} else {
+if (!$user) {
   $db->query('insert into User (email, password) values (:email, :password)', [
     'email' => $email,
     'password' => password_hash($password, PASSWORD_BCRYPT)
@@ -39,7 +36,6 @@ if ($user) {
   login([
     'email' => $email
   ]);
-
-  header('location: /');
-  exit();
 }
+
+redirect('/');

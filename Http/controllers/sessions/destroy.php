@@ -1,5 +1,4 @@
 <?php
 
 logout();
-header('location: /');
-exit();
+redirect('/');

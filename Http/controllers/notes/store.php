@@ -40,5 +40,4 @@ $db->query('insert into Note(title, body, userId) values (:title, :body, :uid)',
   'uid' => 1
 ]);
 
-header('location: /notes');
-die();
+redirect('/notes');
