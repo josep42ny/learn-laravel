@@ -1,0 +1,16 @@
+{
+  "name": "vscode/learn-laravel",
+  "authors": [
+      {
+          "name": "josep42ny",
+          "email": "82282886+josep42ny@users.noreply.github.com"
+      }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Core\\": "Core/",
+      "Http\\": "Http/"
+    }
+  }
+}
