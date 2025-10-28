@@ -46,3 +46,8 @@ function redirect($path): void
   header("location: {$path}");
   exit();
 }
+
+function old($key): mixed
+{
+  return Core\Session::get('old')[$key] ?? '';
+}
