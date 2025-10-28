@@ -11,9 +11,24 @@
   "forwardPorts": [8080, 3306],
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
-  "postAttachCommand": "php -S 127.0.0.1:8080 -t public"
+  "postAttachCommand": "php -S 127.0.0.1:8080 -t public",
   // Configure tool-specific properties.
-  // "customizations": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "stivo.tailwind-fold",
+        "christian-kohler.path-intellisense",
+        "oderwat.indent-rainbow",
+        "streetsidesoftware.code-spell-checker",
+        "DEVSENSE.phptools-vscode",
+        "xdebug.php-debug",
+        "bmewburn.vscode-intelephense-client",
+        "DEVSENSE.profiler-php-vscode",
+        "DEVSENSE.composer-php-vscode"
+      ]
+    }
+  }
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
 }

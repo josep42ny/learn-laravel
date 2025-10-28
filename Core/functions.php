@@ -43,6 +43,6 @@ function view($path, $attributes = []): void
 
 function redirect($path): void
 {
-  header("loaction: {$path}");
+  header("location: {$path}");
   exit();
 }

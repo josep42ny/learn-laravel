@@ -1,6 +1,8 @@
 <?php
 
 $router->get('/', 'home.php');
+$router->get('/contact', 'contact.php');
+$router->get('/about', 'about.php');
 
 $router->get('/notes', 'notes/index.php')->only('auth');
 
@@ -12,10 +14,6 @@ $router->post('/notes', 'notes/store.php')->only('auth');
 
 $router->get('/note/edit', 'notes/edit.php')->only('auth');
 $router->patch('/notes', 'notes/update.php')->only('auth');
-
-$router->get('/contact', 'contact.php');
-
-$router->get('/about', 'about.php');
 
 $router->get('/register', 'registration/create.php')->only('guest');
 $router->post('/register', 'registration/store.php')->only('guest');
