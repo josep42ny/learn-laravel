@@ -8,7 +8,7 @@ class Router
 {
   private $routes = [];
 
-  public function route($uri, $method): mixed
+  public function route($uri, $method)
   {
     foreach ($this->routes as $route) {
       if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
@@ -50,5 +50,10 @@ class Router
   public function delete($uri, $controller): Router
   {
     return $this->add('DELETE', $uri, $controller);
+  }
+
+  public function previousUrl()
+  {
+    return $_SERVER['HTTP_REFERER'];
   }
 }
