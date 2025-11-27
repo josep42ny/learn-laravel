@@ -1,0 +1,44 @@
+<?php
+
+class Note
+{
+  public function __construct(
+    private int $id,
+    private string $title,
+    private string $body,
+    private int $userId
+  ) {}
+
+  public function getId(): string
+  {
+    return $this->id;
+  }
+  public function setId($id): void
+  {
+    $this->id = $id;
+  }
+  public function getTitle(): string
+  {
+    return $this->title;
+  }
+  public function setTitle($title): void
+  {
+    $this->title = $title;
+  }
+  public function getBody(): string
+  {
+    return $this->body;
+  }
+  public function setBody($body): void
+  {
+    $this->body = $body;
+  }
+  public function getUserId(): string
+  {
+    return $this->userId;
+  }
+  public function setUserId($userId): void
+  {
+    $this->userId = $userId;
+  }
+}

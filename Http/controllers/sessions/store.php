@@ -1,8 +1,6 @@
 <?php
 
 use Core\Authenticator;
-use Core\Session;
-use Core\ValidationException;
 use Http\Forms\LoginForm;
 
 $parameters = [

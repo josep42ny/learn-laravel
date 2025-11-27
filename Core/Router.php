@@ -16,7 +16,8 @@ class Router
         return require baseUrl('Http/controllers/' . $route['controller']);
       }
     }
-    abort();
+
+    abort(404);
   }
 
   public function only($key)

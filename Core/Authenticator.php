@@ -24,7 +24,13 @@ class Authenticator
 
   public function login($user): void
   {
+    $db = App::resolve(Database::class);
+    $id = $db->query('select id from User where email like :email', [
+      'email' => $user['email']
+    ])->get();
+
     $_SESSION['user'] = [
+      'id' => $id,
       'email' => $user['email']
     ];
 
