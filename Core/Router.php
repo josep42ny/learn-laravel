@@ -3,6 +3,7 @@
 namespace Core;
 
 use Core\Middleware\Middleware;
+use Http\controllers;
 
 class Router
 {
@@ -13,6 +14,9 @@ class Router
     foreach ($this->routes as $route) {
       if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
         Middleware::resolve($route['middleware']);
+
+        $route['controllerMethod'] ? (new ('Http\controllers\\' . $route['controller']))->{$route['controllerMethod']}() : null;
+
         return require baseUrl('Http/controllers/' . $route['controller']);
       }
     }
@@ -26,31 +30,31 @@ class Router
     return $this;
   }
 
-  private function add($method, $uri, $controller): Router
+  private function add($method, $uri, $controller, $controllerMethod = null): Router
   {
     $middleware = null;
-    $this->routes[] = compact('method', 'uri', 'controller', 'middleware');
+    $this->routes[] = compact('method', 'uri', 'controller', 'middleware', 'controllerMethod');
     return $this;
   }
 
-  public function get($uri, $controller): Router
+  public function get($uri, $controller,  $controllerMethod = null): Router
   {
-    return $this->add('GET', $uri, $controller);
+    return $this->add('GET', $uri, $controller, $controllerMethod);
   }
 
-  public function patch($uri, $controller): Router
+  public function patch($uri, $controller,  $controllerMethod = null): Router
   {
-    return $this->add('PATCH', $uri, $controller);
+    return $this->add('PATCH', $uri, $controller, $controllerMethod);
   }
 
-  public function post($uri, $controller): Router
+  public function post($uri, $controller,  $controllerMethod = null): Router
   {
-    return $this->add('POST', $uri, $controller);
+    return $this->add('POST', $uri, $controller, $controllerMethod);
   }
 
-  public function delete($uri, $controller): Router
+  public function delete($uri, $controller,  $controllerMethod = null): Router
   {
-    return $this->add('DELETE', $uri, $controller);
+    return $this->add('DELETE', $uri, $controller, $controllerMethod);
   }
 
   public function previousUrl()

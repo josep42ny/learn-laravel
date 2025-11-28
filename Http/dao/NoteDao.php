@@ -1,5 +1,9 @@
 <?php
 
+namespace Http\dao;
+
+use Http\model\Note;
+
 interface NoteDao
 {
   public function getAll(int $userId): array;

@@ -1,7 +1,11 @@
 <?php
 
+namespace Http\controllers;
+
 use Core\Session;
 use Core\Validator;
+use Http\dao\NoteDao;
+use Http\dao\NoteDaoFactory;
 
 class NotesController
 {
@@ -50,9 +54,7 @@ class NotesController
   public function index()
   {
     $authorisedUser = Session::get('user')['id'];
-
     $notes = $this->service->getAll($authorisedUser);
-
     view('notes/index.view.php', [
       'heading' => 'My Notes',
       'notes' => $notes,

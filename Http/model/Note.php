@@ -1,5 +1,7 @@
 <?php
 
+namespace Http\model;
+
 class Note
 {
   public function __construct(
@@ -9,7 +11,7 @@ class Note
     private int $userId
   ) {}
 
-  public function getId(): string
+  public function getId(): int
   {
     return $this->id;
   }
@@ -33,7 +35,7 @@ class Note
   {
     $this->body = $body;
   }
-  public function getUserId(): string
+  public function getUserId(): int
   {
     return $this->userId;
   }

@@ -13,7 +13,7 @@ class Authenticator
 
     if ($user) {
       if (password_verify($password, $user['password'])) {
-        $this->login(['email' => $email]);
+        $this->login(['id' => $user['id'], 'email' => $email]);
 
         return true;
       }
@@ -24,13 +24,8 @@ class Authenticator
 
   public function login($user): void
   {
-    $db = App::resolve(Database::class);
-    $id = $db->query('select id from User where email like :email', [
-      'email' => $user['email']
-    ])->get();
-
     $_SESSION['user'] = [
-      'id' => $id,
+      'id' => $user['id'],
       'email' => $user['email']
     ];
 

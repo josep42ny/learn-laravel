@@ -15,7 +15,7 @@ class LoginForm
       $this->errors['email'] = ['Provide a valid email address.'];
     }
 
-    if (!Validator::string($parameters['password'], 10)) {
+    if (!Validator::string($parameters['password'], 8)) {
       $this->errors['password'] = ['Provide a valid password'];
     }
 

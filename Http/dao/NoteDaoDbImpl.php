@@ -1,26 +1,33 @@
 <?php
 
+namespace Http\dao;
+
 use Core\App;
 use Core\Database;
+use Http\model\Note;
+
+use function PHPSTORM_META\map;
 
 class NoteDaoDbImpl implements NoteDao
 {
   public function getAll(int $userId): array
   {
     $db = App::resolve(Database::class);
-    return $db->query('select * from Note where userId = :id', ['id' => $userId])->getAll();
+    $notes = $db->query('select * from Note where userId = :id', ['id' => $userId])->getAll();
+    return array_map([$this, 'noteOf'], $notes);
   }
 
   public function get(int $noteId): Note
   {
     $db = App::resolve(Database::class);
-    return $db->query('select * from Note where id = :id', ['id' => $noteId])->getOrFail();
+    $note = $db->query('select * from Note where id = :id', ['id' => $noteId])->getOrFail();
+    return $this->noteOf($note);
   }
 
   public function delete(int $noteId): void
   {
     $db = App::resolve(Database::class);
-    $db->query('delete from Note where id = :noteId', ['id' => $noteId]);
+    $db->query('delete from Note where id = :id', ['id' => $noteId]);
   }
 
   public function store(string $title, string $body, int $userId): void
@@ -41,5 +48,15 @@ class NoteDaoDbImpl implements NoteDao
       'body' => $body,
       'id' => $noteId
     ]);
+  }
+
+  private function noteOf($obj): Note
+  {
+    return new Note(
+      $obj['id'],
+      $obj['title'],
+      $obj['body'],
+      $obj['userId']
+    );
   }
 }

@@ -34,7 +34,7 @@ if (!$user) {
     'password' => password_hash($password, PASSWORD_BCRYPT)
   ]);
 
-  (new Authenticator)->login(['email' => $email]);
+  (new Authenticator)->attempt($email, $password);
 }
 
 redirect('/');

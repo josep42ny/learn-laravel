@@ -1,19 +1,21 @@
 <?php
 
+use Http\controllers\NotesController;
+
 $router->get('/', 'home.php');
 $router->get('/contact', 'contact.php');
 $router->get('/about', 'about.php');
 
-$router->get('/notes', 'notes/index.php')->only('auth');
+$router->get('/notes', 'NotesController', 'index')->only('auth');
 
-$router->get('/note', 'notes/show.php')->only('auth');
-$router->delete('/note', 'notes/destroy.php')->only('auth');
+$router->get('/note', 'NotesController', 'show')->only('auth');
+$router->delete('/note',  'NotesController', 'destroy')->only('auth');
 
-$router->get('/notes/create', 'notes/create.php')->only('auth');
-$router->post('/notes', 'notes/store.php')->only('auth');
+$router->get('/notes/create', 'NotesController', 'create')->only('auth');
+$router->post('/notes', 'NotesController', 'store')->only('auth');
 
-$router->get('/note/edit', 'notes/edit.php')->only('auth');
-$router->patch('/notes', 'notes/update.php')->only('auth');
+$router->get('/note/edit', 'NotesController', 'edit')->only('auth');
+$router->patch('/notes', 'NotesController', 'update')->only('auth');
 
 $router->get('/register', 'registration/create.php')->only('guest');
 $router->post('/register', 'registration/store.php')->only('guest');
