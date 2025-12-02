@@ -16,6 +16,12 @@ create table Note (
   on delete cascade on update cascade
 );
 
+create table Token (
+  id int unsigned auto_increment primary key,
+  token varchar(36) default uuid(),
+  created_at timestamp default current_timestamp
+);
+
 insert into User (email, password) values
 ('bob@example.com', '$2a$12$G4KP32KMdLbY2q6603mlLODdYAxVRrRk/nW/rKFIT9x/lj4NiWhVC'),
 ('alice@example.com', '$2a$12$Dcq0fRbdUinOTpkYJV4BpeCGakkUPIKqbIqE5gvmXfVBg.uK3LfHm');
