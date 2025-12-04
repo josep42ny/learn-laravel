@@ -2,7 +2,9 @@
 
 namespace Http\model;
 
-class Note
+use JsonSerializable;
+
+class Note implements JsonSerializable
 {
   public function __construct(
     private int $id,
@@ -42,5 +44,10 @@ class Note
   public function setUserId($userId): void
   {
     $this->userId = $userId;
+  }
+
+  public function jsonSerialize(): mixed
+  {
+    return get_object_vars($this);
   }
 }

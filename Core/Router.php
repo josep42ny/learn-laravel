@@ -12,16 +12,40 @@ class Router
   public function route($uri, $method)
   {
     foreach ($this->routes as $route) {
-      if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
+      $params = $this->matchPath($route['uri'], $uri);
+
+      if ($params !== null || $route['uri'] === $uri && $route['method'] === strtoupper($method)) {
         Middleware::resolve($route['middleware']);
 
-        $route['controllerMethod'] ? (new ('Http\controllers\\' . $route['controller']))->{$route['controllerMethod']}() : null;
+        if (!$route['controllerMethod']) {
+          return require baseUrl('Http/controllers/' . $route['controller']);
+        }
 
-        return require baseUrl('Http/controllers/' . $route['controller']);
+        if ($params) {
+          return (new ('Http\controllers\\' . $route['controller']))->{$route['controllerMethod']}($params);
+        }
+
+        return (new ('Http\controllers\\' . $route['controller']))->{$route['controllerMethod']}();
       }
     }
 
     abort(404);
+  }
+
+  function matchPath(string $template, string $path): array|null
+  {
+    $regex = preg_replace('#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#', '(?P<$1>[^/]+)', $template);
+    $regex = "#^$regex$#";
+
+    if (!preg_match($regex, $path, $matches)) {
+      return null;
+    }
+
+    return array_filter(
+      $matches,
+      fn($key) => !is_int($key),
+      ARRAY_FILTER_USE_KEY
+    );
   }
 
   public function only($key)
