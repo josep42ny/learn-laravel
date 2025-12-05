@@ -14,7 +14,7 @@ class Router
     foreach ($this->routes as $route) {
       $params = $this->matchPath($route['uri'], $uri);
 
-      if ($params !== null || $route['uri'] === $uri && $route['method'] === strtoupper($method)) {
+      if ($params !== null && $route['method'] === strtoupper($method) || $route['uri'] === $uri && $route['method'] === strtoupper($method)) {
         Middleware::resolve($route['middleware']);
 
         if (!$route['controllerMethod']) {
@@ -32,6 +32,7 @@ class Router
     abort(404);
   }
 
+  // Copiat Laravel
   function matchPath(string $template, string $path): array|null
   {
     $regex = preg_replace('#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#', '(?P<$1>[^/]+)', $template);

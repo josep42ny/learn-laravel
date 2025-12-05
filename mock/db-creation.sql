@@ -18,7 +18,7 @@ create table Note (
 
 create table Token (
   id int unsigned auto_increment primary key,
-  token varchar(36) default uuid(),
+  token varchar(255),
   created_at timestamp default current_timestamp
 );
 

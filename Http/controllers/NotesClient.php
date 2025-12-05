@@ -51,16 +51,17 @@ class NotesClient
     }
 
     $this->service->delete($params['id']);
-    $this->respond([]);
+    $this->respond([], 201);
   }
 
-  private function respond($data): void
+  private function respond($data, $statusCode = 200): void
   {
     header('Content-Type: application/json');
+    http_response_code($statusCode);
 
     $json = json_encode($data);
-
     view('api/json.php', ['json' => $json]);
+    die();
   }
   /*
   public function create(): void
