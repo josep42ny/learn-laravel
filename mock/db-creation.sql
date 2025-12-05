@@ -4,6 +4,7 @@ use myapp;
 create table User (
   id int unsigned auto_increment primary key,
   email varchar(255) not null unique,
+  token varchar(255),
   password varchar(255) not null
 );
 
@@ -16,15 +17,9 @@ create table Note (
   on delete cascade on update cascade
 );
 
-create table Token (
-  id int unsigned auto_increment primary key,
-  token varchar(255),
-  created_at timestamp default current_timestamp
-);
-
-insert into User (email, password) values
-('bob@example.com', '$2a$12$G4KP32KMdLbY2q6603mlLODdYAxVRrRk/nW/rKFIT9x/lj4NiWhVC'),
-('alice@example.com', '$2a$12$Dcq0fRbdUinOTpkYJV4BpeCGakkUPIKqbIqE5gvmXfVBg.uK3LfHm');
+insert into User (email, password, token) values
+('bob@example.com', '$2a$12$G4KP32KMdLbY2q6603mlLODdYAxVRrRk/nW/rKFIT9x/lj4NiWhVC', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.d3DItXcXHlQOJwZ8G2OUaD8gOOdbYywvYHztQTHCjko'),
+('alice@example.com', '$2a$12$Dcq0fRbdUinOTpkYJV4BpeCGakkUPIKqbIqE5gvmXfVBg.uK3LfHm', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mn0.tPF0VyOnkmxa3Rmmhpo_5HLEROWdpZxPjRXRKqhAgSw');
 
 insert into Note (userId, title, body) values
 (1, 'Ideas for next vacation', 'Asperiores et voluptas qui temporibus. Aperiam dolor similique et et vel voluptatem molestiae illo. Enim sed maxime repudiandae officia voluptatibus deleniti. Aut voluptatem provident et sed earum laudantium tempore.'),

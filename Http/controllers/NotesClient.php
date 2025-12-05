@@ -17,6 +17,9 @@ class NotesClient
 
   public function getAll(): void
   {
+
+    dd(getallheaders()['Authorization']);
+
     $data = [
       'notes' => $this->service->getAll(1)
     ];

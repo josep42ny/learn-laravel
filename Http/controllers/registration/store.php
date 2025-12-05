@@ -3,6 +3,7 @@
 use Core\App;
 use Core\Authenticator;
 use Core\Database;
+use Core\Jwt;
 use Core\Validator;
 
 $email = $_POST['email'];
@@ -32,6 +33,15 @@ if (!$user) {
   $db->query('insert into User (email, password) values (:email, :password)', [
     'email' => $email,
     'password' => password_hash($password, PASSWORD_BCRYPT)
+  ]);
+
+  $newUser = $db->query('select * from User where email like :email', [
+    'email' => $email
+  ])->get();
+
+  $db->query('update User set token = :token where id = :id', [
+    'id' => $newUser['id'],
+    'token' => Jwt::encode(['id' => $newUser['id']])
   ]);
 
   (new Authenticator)->attempt($email, $password);

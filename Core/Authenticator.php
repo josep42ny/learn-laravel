@@ -24,10 +24,10 @@ class Authenticator
 
   public function login($user): void
   {
-    $_SESSION['user'] = [
+    Session::put('user', [
       'id' => $user['id'],
       'email' => $user['email']
-    ];
+    ]);
 
     session_regenerate_id(true);
   }
