@@ -5,23 +5,36 @@ namespace Http\controllers;
 use Core\Validator;
 use Http\dao\NoteDao;
 use Http\dao\NoteDaoFactory;
+use Http\dao\UserDao;
+use Http\dao\UserDaoFactory;
 
 class NotesClient
 {
-  private NoteDao $service;
+  private NoteDao $noteService;
+  private UserDao $userService;
 
   public function __construct()
   {
-    $this->service = NoteDaoFactory::assemble();
+    $this->noteService = NoteDaoFactory::assemble();
+    $this->userService = UserDaoFactory::assemble();
   }
 
   public function getAll(): void
   {
 
-    dd(getallheaders()['Authorization']);
-
+    $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
+    $users = $this->userService->getAll();
+    $tokenIsValid = false;
+    $validUser = null;
+    foreach ($users as $user) {
+      $tokenIsValid = $user->getToken() == $token;
+      if ($tokenIsValid) {
+        $validUser = $user;
+        break;
+      }
+    }
     $data = [
-      'notes' => $this->service->getAll(1)
+      'notes' => $this->noteService->getAll($validUser->getId())
     ];
 
     $this->respond($data);
@@ -33,11 +46,15 @@ class NotesClient
       abort(400);
     }
 
-
+    $users = $this->userService->getAll();
+    $tokenIsValid = false;
+    foreach ($users as $user) {
+      $tokenIsValid = $user->getToken() == 0; //TODO
+    }
 
     $this->respond(
       [
-        'notes' => $this->service->get($params['id'])
+        'notes' => $this->noteService->get($params['id'])
       ]
     );
   }
@@ -55,7 +72,7 @@ class NotesClient
       abort(400);
     }
 
-    $this->service->delete($params['id']);
+    $this->noteService->delete($params['id']);
     $this->respond([], 201);
   }
 
@@ -81,11 +98,11 @@ class NotesClient
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->noteService->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
-    $this->service->delete($nid);
+    $this->noteService->delete($nid);
     redirect('/notes');
   }
 
@@ -94,7 +111,7 @@ class NotesClient
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->noteService->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -108,7 +125,7 @@ class NotesClient
   public function index()
   {
     $authorisedUser = Session::get('user')['id'];
-    $notes = $this->service->getAll($authorisedUser);
+    $notes = $this->noteService->getAll($authorisedUser);
     view('notes/index.view.php', [
       'heading' => 'My Notes',
       'notes' => $notes,
@@ -120,7 +137,7 @@ class NotesClient
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->noteService->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -161,7 +178,7 @@ class NotesClient
       ]);
     }
 
-    $this->service->store($_POST['title'], $_POST['body'], $authorisedUser);
+    $this->noteService->store($_POST['title'], $_POST['body'], $authorisedUser);
     redirect('/notes');
   }
   public function update(): void
@@ -174,7 +191,7 @@ class NotesClient
     ];
 
     $nid = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->noteService->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -202,7 +219,7 @@ class NotesClient
       ]);
     }
 
-    $this->service->update($_POST['title'], $_POST['body'], $_POST['id']);
+    $this->noteService->update($_POST['title'], $_POST['body'], $_POST['id']);
     redirect('/notes');
   }
 */
