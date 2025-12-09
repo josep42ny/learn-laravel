@@ -6,8 +6,6 @@ use Core\App;
 use Core\Database;
 use Http\model\Note;
 
-use function PHPSTORM_META\map;
-
 class NoteDaoDbImpl implements NoteDao
 {
   public function getAll(int $userId): array

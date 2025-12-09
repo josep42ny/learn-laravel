@@ -33,11 +33,13 @@ class NotesClient
       abort(400);
     }
 
-    $data = [
-      'notes' => $this->service->get($params['id'])
-    ];
 
-    $this->respond($data);
+
+    $this->respond(
+      [
+        'notes' => $this->service->get($params['id'])
+      ]
+    );
   }
 
   public function store()
