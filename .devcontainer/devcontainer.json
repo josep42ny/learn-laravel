@@ -25,7 +25,8 @@
         "xdebug.php-debug",
         "bmewburn.vscode-intelephense-client",
         "DEVSENSE.profiler-php-vscode",
-        "DEVSENSE.composer-php-vscode"
+        "DEVSENSE.composer-php-vscode",
+        "Postman.postman-for-vscode"
       ]
     }
   }

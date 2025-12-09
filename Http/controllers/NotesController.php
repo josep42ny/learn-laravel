@@ -27,11 +27,11 @@ class NotesController
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->service->get($authorisedUser, $nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
-    $this->service->delete($nid);
+    $this->service->delete($authorisedUser, $nid);
     redirect('/notes');
   }
 
@@ -40,7 +40,7 @@ class NotesController
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->service->get($authorisedUser, $nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -66,7 +66,7 @@ class NotesController
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->service->get($authorisedUser, $nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -120,7 +120,7 @@ class NotesController
     ];
 
     $nid = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($nid);
+    $note = $this->service->get($authorisedUser, $nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -148,7 +148,7 @@ class NotesController
       ]);
     }
 
-    $this->service->update($_POST['title'], $_POST['body'], $_POST['id']);
+    $this->service->update($_POST['title'], $_POST['body'], $_POST['id'], $authorisedUser);
     redirect('/notes');
   }
 }
