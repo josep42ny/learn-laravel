@@ -5,7 +5,6 @@ namespace Http\dao;
 use Core\App;
 use Core\Database;
 use Core\Jwt;
-use Http\model\Note;
 use Http\model\Token;
 use Http\model\User;
 
@@ -57,6 +56,14 @@ class UserDaoDbImpl implements UserDao
     $db = App::resolve(Database::class);
     $tokens = $db->query('select * from Token')->getAll();
     return array_map([$this, 'tokenOf'], $tokens);
+  }
+
+  public function deleteToken(string $token): void
+  {
+    $db = App::resolve(Database::class);
+    $tokens = $db->query('delete from Token where value = :token', [
+      'token' => $token
+    ]);
   }
 
   private function userOf($obj): User

@@ -24,4 +24,5 @@ $router->post('/api/v1/notes', 'NotesClient', 'store');
 $router->get('/api/v1/notes/{id}', 'NotesClient', 'getOne');
 $router->patch('/api/v1/notes/{id}', 'NotesClient', 'edit');
 $router->delete('/api/v1/notes/{id}', 'NotesClient', 'destroy');
-$router->get('/api/v1/users/auth', 'UsersClient', 'getToken');
+$router->post('/api/v1/users/auth', 'UsersClient', 'getToken');
+$router->delete('/api/v1/users/auth', 'UsersClient', 'deleteToken');

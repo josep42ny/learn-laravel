@@ -45,4 +45,9 @@ class UserService
   {
     return $this->userDao->getAllTokens();
   }
+
+  public function deleteToken(string $token): void
+  {
+    $this->userDao->deleteToken($token);
+  }
 }

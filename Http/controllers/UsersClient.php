@@ -38,9 +38,19 @@ class UsersClient
     $this->respond(['token' => $token]);
   }
 
-  private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void
+  public function deleteToken()
   {
-    header('Content-Type: application/json');
+    $this->attemptValidateUser();
+
+    $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
+    $this->userService->deleteToken($token);
+
+    http_response_code(HttpResponse::NO_CONTENT->value);
+    die();
+  }
+
+  private function respond(array | null $data, HttpResponse $statusCode = HttpResponse::OK): void
+  {
     http_response_code($statusCode->value);
 
     $json = json_encode($data);
@@ -51,15 +61,15 @@ class UsersClient
   private function attemptValidateUser(): User
   {
     if (!array_key_exists('Authorization', getallheaders())) {
-      abort(HttpResponse::FORBIDDEN);
+      abort(HttpResponse::UNAUTHORIZED);
     }
 
     $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
-    $users = $this->userService->getAll();
+    $tokens = $this->userService->getAllTokens();
 
-    foreach ($users as $user) {
-      if ($user->getToken() == $token) {
-        return $user;
+    foreach ($tokens as $t) {
+      if ($t->getValue() == $token) {
+        return $this->userService->get($t->getSub());
       }
     }
 

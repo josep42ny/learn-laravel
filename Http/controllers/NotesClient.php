@@ -70,7 +70,8 @@ class NotesClient
     $validUser = $this->attemptValidateUser();
 
     $this->noteService->delete($validUser->getId(), $params['id']);
-    $this->respond([], 201);
+    http_response_code(HttpResponse::NO_CONTENT->value);
+    die();
   }
 
   public function edit($params)

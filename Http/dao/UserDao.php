@@ -12,4 +12,5 @@ interface UserDao
   public function update(int $id, string $email, string $token, string $password): void;
   public function addToken(int $id, string $token): void;
   public function getAllTokens(): array;
+  public function deleteToken(string $token): void;
 }
