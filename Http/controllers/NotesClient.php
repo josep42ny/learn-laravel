@@ -2,22 +2,22 @@
 
 namespace Http\controllers;
 
+use Core\HttpResponse;
 use Core\Validator;
 use Http\dao\NoteDao;
 use Http\dao\NoteDaoFactory;
-use Http\dao\UserDao;
-use Http\dao\UserDaoFactory;
 use Http\model\User;
+use Http\services\UserService;
 
 class NotesClient
 {
   private NoteDao $noteService;
-  private UserDao $userService;
+  private UserService $userService;
 
   public function __construct()
   {
     $this->noteService = NoteDaoFactory::assemble();
-    $this->userService = UserDaoFactory::assemble();
+    $this->userService = new UserService();
   }
 
   public function getAll(): void
@@ -34,7 +34,7 @@ class NotesClient
   public function getOne(array $params)
   {
     if (!Validator::integer($params['id'])) {
-      abort(400);
+      abort(HttpResponse::BAD_REQUEST);
     }
 
     $validUser = $this->attemptValidateUser();
@@ -58,7 +58,7 @@ class NotesClient
   public function destroy($params)
   {
     if (!Validator::integer($params['id'])) {
-      abort(400);
+      abort(HttpResponse::BAD_REQUEST);
     }
 
     $validUser = $this->attemptValidateUser();
@@ -70,7 +70,7 @@ class NotesClient
   public function edit($params)
   {
     if (!Validator::integer($params['id'])) {
-      abort(400);
+      abort(HttpResponse::BAD_REQUEST);
     }
 
     $requestBody = json_decode(file_get_contents('php://input'));
@@ -93,18 +93,18 @@ class NotesClient
   private function attemptValidateUser(): User
   {
     if (!array_key_exists('Authorization', getallheaders())) {
-      abort(403);
+      abort(HttpResponse::FORBIDDEN);
     }
 
     $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
-    $users = $this->userService->getAll();
+    $tokens = $this->userService->getAllTokens();
 
-    foreach ($users as $user) {
-      if ($user->getToken() == $token) {
-        return $user;
+    foreach ($tokens as $t) {
+      if ($t->value == $token) {
+        return $this->userService->get($t->sub);
       }
     }
 
-    abort(403);
+    abort(HttpResponse::FORBIDDEN);
   }
 }

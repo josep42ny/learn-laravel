@@ -2,9 +2,13 @@
 
 namespace Core;
 
-class HttpResponse
+enum HttpResponse: int
 {
+  // 
+  case OK = 200;
 
-  const NOT_FOUND = 404;
-  const FORBIDDEN = 403;
+    //
+  case BAD_REQUEST = 400;
+  case FORBIDDEN = 403;
+  case NOT_FOUND = 404;
 }

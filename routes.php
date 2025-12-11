@@ -20,7 +20,8 @@ $router->post('/sessions', 'sessions/store.php')->only('guest');
 $router->delete('/sessions', 'sessions/destroy.php')->only('loggedIn');
 
 $router->get('/api/v1/notes', 'NotesClient', 'getAll');
-$router->post('/api/v1/notes', 'NotesClient', 'store'); //TODO
+$router->post('/api/v1/notes', 'NotesClient', 'store');
 $router->get('/api/v1/notes/{id}', 'NotesClient', 'getOne');
-$router->patch('/api/v1/notes/{id}', 'NotesClient', 'edit'); //TODO
+$router->patch('/api/v1/notes/{id}', 'NotesClient', 'edit');
 $router->delete('/api/v1/notes/{id}', 'NotesClient', 'destroy');
+$router->get('/api/v1/users/auth', 'UsersClient', 'getToken');

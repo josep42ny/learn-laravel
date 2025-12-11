@@ -16,10 +16,10 @@ function uriIs($var)
   return $_SERVER['REQUEST_URI'] === $var;
 }
 
-function abort($statusCode = HttpResponse::NOT_FOUND)
+function abort(HttpResponse $statusCode = HttpResponse::NOT_FOUND)
 {
-  http_response_code($statusCode);
-  require baseUrl("views/{$statusCode}.php");
+  http_response_code($statusCode->value);
+  require baseUrl("views/{$statusCode->value}.php");
   die();
 }
 

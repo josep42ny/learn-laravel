@@ -7,7 +7,6 @@ class User
   public function __construct(
     private int $id,
     private string $email,
-    private string $token,
     private string $password
   ) {}
 
@@ -26,14 +25,6 @@ class User
   public function setEmail($email): void
   {
     $this->email = $email;
-  }
-  public function getToken(): string
-  {
-    return $this->token;
-  }
-  public function setToken($token): void
-  {
-    $this->token = $token;
   }
   public function getPassword(): string
   {

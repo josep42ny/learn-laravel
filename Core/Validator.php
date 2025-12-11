@@ -25,4 +25,15 @@ class Validator
     }
     return true;
   }
+
+  public static function objectFields(object $object, array $fields): bool
+  {
+    foreach ($fields as $field) {
+      if (!isset($object->$field)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
