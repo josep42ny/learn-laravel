@@ -6,6 +6,7 @@ use Core\HttpResponse;
 use Core\Validator;
 use Http\dao\NoteDao;
 use Http\dao\NoteDaoFactory;
+use Http\model\Token;
 use Http\model\User;
 use Http\services\UserService;
 
@@ -39,9 +40,14 @@ class NotesClient
 
     $validUser = $this->attemptValidateUser();
 
+    $note = $this->noteService->get($params['id']);
+    if ($note->getUserId() != $validUser->getId()) {
+      abort(HttpResponse::FORBIDDEN);
+    }
+
     $this->respond(
       [
-        'notes' => $this->noteService->get($validUser->getId(), $params['id'])
+        'notes' => $note
       ]
     );
   }
@@ -93,15 +99,15 @@ class NotesClient
   private function attemptValidateUser(): User
   {
     if (!array_key_exists('Authorization', getallheaders())) {
-      abort(HttpResponse::FORBIDDEN);
+      abort(HttpResponse::UNAUTHORIZED);
     }
 
     $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
     $tokens = $this->userService->getAllTokens();
 
     foreach ($tokens as $t) {
-      if ($t->value == $token) {
-        return $this->userService->get($t->sub);
+      if ($t->getValue() == $token) {
+        return $this->userService->get($t->getSub());
       }
     }
 

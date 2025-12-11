@@ -29,7 +29,7 @@ class Router
       }
     }
 
-    abort(404);
+    abort();
   }
 
   // Copiat Laravel

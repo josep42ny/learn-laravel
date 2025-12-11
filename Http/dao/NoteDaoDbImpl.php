@@ -15,12 +15,11 @@ class NoteDaoDbImpl implements NoteDao
     return array_map([$this, 'noteOf'], $notes);
   }
 
-  public function get(int $userId, int $noteId): Note
+  public function get(int $noteId): Note
   {
     $db = App::resolve(Database::class);
-    $note = $db->query('select * from Note where id = :id and userId = :userId', [
-      'id' => $noteId,
-      'userId' => $userId
+    $note = $db->query('select * from Note where id = :id', [
+      'id' => $noteId
     ])->getOrFail();
     return $this->noteOf($note);
   }

@@ -27,7 +27,7 @@ class NotesController
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($authorisedUser, $nid);
+    $note = $this->service->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -40,7 +40,7 @@ class NotesController
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($authorisedUser, $nid);
+    $note = $this->service->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -66,7 +66,7 @@ class NotesController
     $authorisedUser = Session::get('user')['id'];
 
     $nid = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($authorisedUser, $nid);
+    $note = $this->service->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 
@@ -120,7 +120,7 @@ class NotesController
     ];
 
     $nid = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
-    $note = $this->service->get($authorisedUser, $nid);
+    $note = $this->service->get($nid);
 
     authorise($note->getUserId() === $authorisedUser);
 

@@ -68,14 +68,14 @@ class UserDaoDbImpl implements UserDao
     );
   }
 
-  private function tokenOf($obj): Token
+  private function tokenOf(array $rawToken): Token
   {
-    $rawToken = Jwt::decode($obj['value']);
-    dd($obj);
+    $token = Jwt::decode($rawToken['value']);
+
     return new Token(
-      $obj['value'],
-      $rawToken['sub'],
-      $rawToken['iat']
+      $rawToken['value'],
+      $token['sub'],
+      $token['iat']
     );
   }
 }

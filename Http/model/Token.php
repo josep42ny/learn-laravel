@@ -5,12 +5,12 @@ namespace Http\model;
 class Token
 {
   public function __construct(
-    private int $value,
-    private string $sub,
-    private string $iat
+    private string $value,
+    private int $sub,
+    private int $iat
   ) {}
 
-  public function getValue(): int
+  public function getValue(): string
   {
     return $this->value;
   }
@@ -18,7 +18,7 @@ class Token
   {
     $this->value = $value;
   }
-  public function getSub(): string
+  public function getSub(): int
   {
     return $this->sub;
   }
@@ -26,7 +26,7 @@ class Token
   {
     $this->sub = $sub;
   }
-  public function getIat(): string
+  public function getIat(): int
   {
     return $this->iat;
   }
