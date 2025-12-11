@@ -24,12 +24,11 @@ class NoteDaoDbImpl implements NoteDao
     return $this->noteOf($note);
   }
 
-  public function delete(int $userId, int $noteId): void
+  public function delete(int $noteId): void
   {
     $db = App::resolve(Database::class);
-    $db->query('delete from Note where id = :id and userId = :userId', [
-      'id' => $noteId,
-      'userId' => $userId
+    $db->query('delete from Note where id = :id', [
+      'id' => $noteId
     ]);
   }
 
@@ -43,14 +42,27 @@ class NoteDaoDbImpl implements NoteDao
     ]);
   }
 
-  public function update(string $title, string $body, int $noteId, int $userId): void
+  public function update(string | null $title, string | null $body, int $noteId): void
   {
+    if (!isset($title) && !isset($body)) {
+      return;
+    }
+
     $db = App::resolve(Database::class);
-    $db->query('update Note set title = :title, body = :body where id = :id and userId = :userId', [
+    if (isset($title) && !isset($body)) {
+      $db->query('update Note set body = :title where id = :id', ['title' => $title, 'id' => $noteId]);
+      return;
+    }
+
+    if (!isset($title) && isset($body)) {
+      $db->query('update Note set body = :body where id = :id', ['body' => $body, 'id' => $noteId]);
+      return;
+    }
+
+    $db->query('update Note set title = :title, body = :body where id = :id', [
       'title' => $title,
       'body' => $body,
-      'id' => $noteId,
-      'userId' => $userId
+      'id' => $noteId
     ]);
   }
 

@@ -31,7 +31,7 @@ class NotesController
 
     authorise($note->getUserId() === $authorisedUser);
 
-    $this->service->delete($authorisedUser, $nid);
+    $this->service->delete($nid);
     redirect('/notes');
   }
 
@@ -148,7 +148,7 @@ class NotesController
       ]);
     }
 
-    $this->service->update($_POST['title'], $_POST['body'], $_POST['id'], $authorisedUser);
+    $this->service->update($_POST['title'], $_POST['body'], $_POST['id']);
     redirect('/notes');
   }
 }
