@@ -5,6 +5,7 @@ namespace Http\services;
 use Core\Jwt;
 use Http\dao\UserDao;
 use Http\dao\UserDaoFactory;
+use Http\model\Token;
 use Http\model\User;
 
 class UserService
@@ -19,17 +20,20 @@ class UserService
 
   public function get(int $id): User
   {
-    return $this->userDao->get($id);
+    $rawUser = $this->userDao->get($id);
+    return $this->userOf($rawUser);
   }
 
   public function getByEmail(string $email): User
   {
-    return $this->userDao->getByEmail($email);
+    $rawUser = $this->userDao->getByEmail($email);
+    return $this->userOf($rawUser);
   }
 
   public function getAll(): array
   {
-    return $this->userDao->getAll();
+    $rawUsers = $this->userDao->getAll();
+    return array_map([$this, 'userOf'], $rawUsers);
   }
 
   public function addToken(string $email): string
@@ -43,11 +47,32 @@ class UserService
 
   public function getAllTokens(): array
   {
-    return $this->userDao->getAllTokens();
+    $rawTokens = $this->userDao->getAllTokens();
+    return array_map([$this, 'tokenOf'], $rawTokens);
   }
 
   public function deleteToken(string $token): void
   {
     $this->userDao->deleteToken($token);
+  }
+
+  private function userOf(mixed $obj): User
+  {
+    return new User(
+      $obj['id'],
+      $obj['email'],
+      $obj['password']
+    );
+  }
+
+  private function tokenOf(array $rawToken): Token
+  {
+    $token = Jwt::decode($rawToken['value']);
+
+    return new Token(
+      $rawToken['value'],
+      $token['sub'],
+      $token['iat']
+    );
   }
 }

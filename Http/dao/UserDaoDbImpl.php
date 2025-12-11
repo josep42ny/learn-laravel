@@ -4,31 +4,28 @@ namespace Http\dao;
 
 use Core\App;
 use Core\Database;
-use Core\Jwt;
-use Http\model\Token;
-use Http\model\User;
 
 class UserDaoDbImpl implements UserDao
 {
   public function getAll(): array
   {
     $db = App::resolve(Database::class);
-    $users = $db->query('select * from User')->getAll();
-    return array_map([$this, 'userOf'], $users);
+    $rawUsers = $db->query('select * from User')->getAll();
+    return $rawUsers;
   }
 
-  public function get(int $userId): User
+  public function get(int $userId): mixed
   {
     $db = App::resolve(Database::class);
-    $user = $db->query('select * from User where id = :id', ['id' => $userId])->getOrFail();
-    return $this->userOf($user);
+    $rawUser = $db->query('select * from User where id = :id', ['id' => $userId])->getOrFail();
+    return $rawUser;
   }
 
-  public function getByEmail(string $email): User
+  public function getByEmail(string $email): mixed
   {
     $db = App::resolve(Database::class);
-    $user = $db->query('select * from User where email = :email', ['email' => $email])->getOrFail();
-    return $this->userOf($user);
+    $rawUser = $db->query('select * from User where email = :email', ['email' => $email])->getOrFail();
+    return $rawUser;
   }
 
   public function update(int $id, string $email, string $token, string $password): void
@@ -42,11 +39,11 @@ class UserDaoDbImpl implements UserDao
     ]);
   }
 
-  public function addToken(int $id, string $token): void
+  public function addToken(int $userId, string $token): void
   {
     $db = App::resolve(Database::class);
     $db->query('insert into Token (value, userId) values (:token, :id)', [
-      'id' => $id,
+      'id' => $userId,
       'token' => $token
     ]);
   }
@@ -54,35 +51,15 @@ class UserDaoDbImpl implements UserDao
   public function getAllTokens(): array
   {
     $db = App::resolve(Database::class);
-    $tokens = $db->query('select * from Token')->getAll();
-    return array_map([$this, 'tokenOf'], $tokens);
+    $rawTokens = $db->query('select * from Token')->getAll();
+    return $rawTokens;
   }
 
   public function deleteToken(string $token): void
   {
     $db = App::resolve(Database::class);
-    $tokens = $db->query('delete from Token where value = :token', [
+    $db->query('delete from Token where value = :token', [
       'token' => $token
     ]);
-  }
-
-  private function userOf($obj): User
-  {
-    return new User(
-      $obj['id'],
-      $obj['email'],
-      $obj['password']
-    );
-  }
-
-  private function tokenOf(array $rawToken): Token
-  {
-    $token = Jwt::decode($rawToken['value']);
-
-    return new Token(
-      $rawToken['value'],
-      $token['sub'],
-      $token['iat']
-    );
   }
 }

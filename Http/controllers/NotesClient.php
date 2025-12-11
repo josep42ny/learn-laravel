@@ -92,7 +92,7 @@ class NotesClient
 
     $this->validateOwnership($noteId, $userId);
 
-    $this->noteDao->update($requestBody->title, $requestBody->body, $noteId);
+    $this->noteDao->update($requestBody->title ?? null, $requestBody->body ?? null, $noteId);
     $this->respondNoPayload();
   }
 
