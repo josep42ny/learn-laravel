@@ -6,44 +6,41 @@ use Core\HttpResponse;
 use Core\Validator;
 use Http\dao\NoteDao;
 use Http\dao\NoteDaoFactory;
-use Http\model\Token;
-use Http\model\User;
+use Http\model\Note;
 use Http\services\UserService;
 
 class NotesClient
 {
-  private NoteDao $noteService;
+  private NoteDao $noteDao;
   private UserService $userService;
 
   public function __construct()
   {
-    $this->noteService = NoteDaoFactory::assemble();
+    $this->noteDao = NoteDaoFactory::assemble();
     $this->userService = new UserService();
   }
 
   public function getAll(): void
   {
-    $validUser = $this->attemptValidateUser();
+    $userId = $this->validateUser();
 
-    $data = [
-      'notes' => $this->noteService->getAll($validUser->getId())
-    ];
-
-    $this->respond($data);
+    $this->respond(
+      [
+        'notes' => $this->noteDao->getAll($userId)
+      ]
+    );
   }
 
   public function getOne(array $params)
   {
-    if (!Validator::integer($params['id'])) {
+    $noteId = $params['id'];
+    if (!Validator::integer($noteId)) {
       abort(HttpResponse::BAD_REQUEST);
     }
 
-    $validUser = $this->attemptValidateUser();
+    $userId = $this->validateUser();
 
-    $note = $this->noteService->get($params['id']);
-    if ($note->getUserId() != $validUser->getId()) {
-      abort(HttpResponse::FORBIDDEN);
-    }
+    $note = $this->validateOwnership($noteId, $userId);
 
     $this->respond(
       [
@@ -55,49 +52,78 @@ class NotesClient
   public function store()
   {
     $requestBody = json_decode(file_get_contents('php://input'));
-    $validUser = $this->attemptValidateUser();
 
-    $this->noteService->store($requestBody->title, $requestBody->body, $validUser->getId());
-    $this->respond([], 201);
+    if (!isset($requestBody) || !Validator::objectFields($requestBody, ['title', 'body'])) {
+      abort(HttpResponse::BAD_REQUEST);
+    };
+
+    $userId = $this->validateUser();
+
+    $this->noteDao->store($requestBody->title, $requestBody->body, $userId);
+    $this->respond(
+      []
+    );
   }
 
   public function destroy($params)
   {
-    if (!Validator::integer($params['id'])) {
+    $noteId = $params['id'];
+    if (!Validator::integer($noteId)) {
       abort(HttpResponse::BAD_REQUEST);
     }
 
-    $validUser = $this->attemptValidateUser();
+    $userId = $this->validateUser();
 
-    $this->noteService->delete($validUser->getId(), $params['id']);
-    http_response_code(HttpResponse::NO_CONTENT->value);
-    die();
+    $this->validateOwnership($noteId, $userId);
+
+    $this->noteDao->delete($noteId);
+    $this->respondNoPayload();
   }
 
   public function edit($params)
   {
-    if (!Validator::integer($params['id'])) {
+    $noteId = $params['id'];
+    if (!Validator::integer($noteId)) {
       abort(HttpResponse::BAD_REQUEST);
     }
 
     $requestBody = json_decode(file_get_contents('php://input'));
-    $validUser = $this->attemptValidateUser();
+    $userId = $this->validateUser();
 
-    $this->noteService->update($requestBody->title, $requestBody->body, $params['id'], $validUser->getId());
-    $this->respond([], 200);
+    $this->validateOwnership($noteId, $userId);
+
+    $this->noteDao->update($requestBody->title, $requestBody->body, $noteId);
+    $this->respondNoPayload();
   }
 
-  private function respond($data, $statusCode = 200): void
+  private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void
   {
     header('Content-Type: application/json');
-    http_response_code($statusCode);
+    http_response_code($statusCode->value);
 
     $json = json_encode($data);
     view('api/json.php', ['json' => $json]);
     die();
   }
 
-  private function attemptValidateUser(): User
+  private function respondNoPayload(HttpResponse $statusCode = HttpResponse::NO_CONTENT): void
+  {
+    http_response_code($statusCode->value);
+    die();
+  }
+
+  private function validateOwnership(int $noteId, int $userId): Note
+  {
+    $note = $this->noteDao->get($noteId);
+
+    if ($note->getUserId() != $userId) {
+      abort(HttpResponse::FORBIDDEN);
+    }
+
+    return $note;
+  }
+
+  private function validateUser(): int
   {
     if (!array_key_exists('Authorization', getallheaders())) {
       abort(HttpResponse::UNAUTHORIZED);
@@ -108,7 +134,7 @@ class NotesClient
 
     foreach ($tokens as $t) {
       if ($t->getValue() == $token) {
-        return $this->userService->get($t->getSub());
+        return $this->userService->get($t->getSub())->getId();
       }
     }
 

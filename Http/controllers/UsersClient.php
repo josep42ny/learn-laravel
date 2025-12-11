@@ -5,19 +5,15 @@ namespace Http\Controllers;
 use Core\Authenticator;
 use Core\HttpResponse;
 use Core\Validator;
-use Http\dao\NoteDao;
-use Http\dao\NoteDaoFactory;
 use Http\model\User;
 use Http\services\UserService;
 
 class UsersClient
 {
-  private NoteDao $noteDao;
   private UserService $userService;
 
   public function __construct()
   {
-    $this->noteDao = NoteDaoFactory::assemble();
     $this->userService = new UserService();
   }
 
@@ -25,7 +21,7 @@ class UsersClient
   {
     $requestBody = json_decode(file_get_contents('php://input'));
 
-    if (!isset($requestBody) || !Validator::objectFields($requestBody, ["email", "password"])) {
+    if (!isset($requestBody) || !Validator::objectFields($requestBody, ['email', 'password'])) {
       abort(HttpResponse::BAD_REQUEST);
     };
 
@@ -49,7 +45,7 @@ class UsersClient
     die();
   }
 
-  private function respond(array | null $data, HttpResponse $statusCode = HttpResponse::OK): void
+  private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void
   {
     http_response_code($statusCode->value);
 
