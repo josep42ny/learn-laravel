@@ -11,7 +11,7 @@
   "forwardPorts": [8080, 3306],
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
-  "postAttachCommand": "composer i && mariadb -h localhost -P 3306 --protocol=tcp -u root --password=mariadb -D myapp < ./mock/init.sql && php -S 127.0.0.1:8080 -t public",
+  "postAttachCommand": "composer i && php -S 127.0.0.1:8080 -t public",
   // Configure tool-specific properties.
   "customizations": {
     "vscode": {
