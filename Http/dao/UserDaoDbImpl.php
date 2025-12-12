@@ -41,12 +41,13 @@ class UserDaoDbImpl implements UserDao
     ]);
   }
 
-  public function addToken(int $userId, string $token): void
+  public function addToken(int $userId, string $token, int $expiration): void
   {
     $db = App::resolve(Database::class);
-    $db->query('insert into Token (value, userId) values (:token, :id)', [
+    $db->query('insert into Token (value, userId, expiration) values (:token, :id, :expiration)', [
       'id' => $userId,
-      'token' => $token
+      'token' => $token,
+      'expiration' => $expiration
     ]);
   }
 

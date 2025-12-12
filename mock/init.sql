@@ -21,6 +21,7 @@ create table Note (
 create table Token (
   value varchar(255) primary key,
   userId int unsigned not null,
+  expiration int unsigned not null,
   constraint fk_token_user foreign key (userId) references User(id)
   on delete cascade on update cascade
 );

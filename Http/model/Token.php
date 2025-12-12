@@ -7,7 +7,8 @@ class Token
   public function __construct(
     private string $value,
     private int $sub,
-    private int $iat
+    private int $iat,
+    private int $expiration
   ) {}
 
   public function getValue(): string

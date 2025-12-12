@@ -41,7 +41,9 @@ class UserService
     $id = $this->getByEmail($email)->getId();
     $token = Jwt::encode(['sub' => $id, 'iat' => time()]);
 
-    $this->userDao->addToken($id, $token);
+    $DAYS_UNIX = 7 * 24 * 60 * 60;
+    $EXPIRY_DATE_UNIX = time() + $DAYS_UNIX;
+    $this->userDao->addToken($id, $token, $EXPIRY_DATE_UNIX);
     return $token;
   }
 
