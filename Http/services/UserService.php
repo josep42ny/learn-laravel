@@ -61,6 +61,8 @@ class UserService
     return new User(
       $obj['id'],
       $obj['email'],
+      $obj['username'],
+      $obj['picture'] ?? null,
       $obj['password']
     );
   }

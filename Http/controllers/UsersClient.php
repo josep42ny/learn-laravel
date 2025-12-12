@@ -36,13 +36,24 @@ class UsersClient
 
   public function deleteToken()
   {
-    $this->attemptValidateUser();
+    $this->validateUser();
 
     $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
     $this->userService->deleteToken($token);
 
     http_response_code(HttpResponse::NO_CONTENT->value);
     die();
+  }
+
+  public function edit(): void
+  {
+    $requestBody = json_decode(file_get_contents('php://input'));
+
+    if (!isset($requestBody) || !Validator::objectFields($requestBody, ['username', 'picture'])) {
+      abort(HttpResponse::BAD_REQUEST);
+    };
+
+    $userId = $this->validateUser();
   }
 
   private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void
@@ -54,7 +65,7 @@ class UsersClient
     die();
   }
 
-  private function attemptValidateUser(): User
+  private function validateUser(): int
   {
     if (!array_key_exists('Authorization', getallheaders())) {
       abort(HttpResponse::UNAUTHORIZED);
@@ -65,7 +76,7 @@ class UsersClient
 
     foreach ($tokens as $t) {
       if ($t->getValue() == $token) {
-        return $this->userService->get($t->getSub());
+        return $this->userService->get($t->getSub())->getId();
       }
     }
 

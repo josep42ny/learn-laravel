@@ -7,6 +7,8 @@ class User
   public function __construct(
     private int $id,
     private string $email,
+    private string $username,
+    private string $picture,
     private string $password
   ) {}
 
@@ -14,7 +16,7 @@ class User
   {
     return $this->id;
   }
-  public function setId($id): void
+  public function setId(int $id): void
   {
     $this->id = $id;
   }
@@ -22,15 +24,31 @@ class User
   {
     return $this->email;
   }
-  public function setEmail($email): void
+  public function setEmail(string $email): void
   {
     $this->email = $email;
+  }
+  public function getUsername(): string
+  {
+    return $this->username;
+  }
+  public function setUsername(string $username): void
+  {
+    $this->username = $username;
+  }
+  public function getPicture(): string
+  {
+    return $this->picture;
+  }
+  public function setPicture(string $picture): void
+  {
+    $this->picture = $picture;
   }
   public function getPassword(): string
   {
     return $this->password;
   }
-  public function setPassword($password): void
+  public function setPassword(string $password): void
   {
     $this->password = $password;
   }
