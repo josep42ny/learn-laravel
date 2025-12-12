@@ -6,6 +6,7 @@ use Core\Session;
 use Core\Validator;
 use Http\dao\NoteDao;
 use Http\dao\NoteDaoFactory;
+use Http\model\Note;
 
 class NotesController
 {
@@ -107,7 +108,7 @@ class NotesController
       ]);
     }
 
-    $this->service->store($_POST['title'], $_POST['body'], $authorisedUser);
+    $this->service->store(new Note(-1, $_POST['title'], $_POST['body'], $authorisedUser));
     redirect('/notes');
   }
   public function update(): void
@@ -148,7 +149,7 @@ class NotesController
       ]);
     }
 
-    $this->service->update($_POST['title'], $_POST['body'], $_POST['id']);
+    $this->service->update(new Note($_POST['id'], $_POST['title'], $_POST['body'], -1));
     redirect('/notes');
   }
 }

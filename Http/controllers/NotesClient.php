@@ -59,7 +59,13 @@ class NotesClient
 
     $userId = $this->validateUser();
 
-    $this->noteDao->store($requestBody->title, $requestBody->body, $userId);
+    $this->noteDao->store(new Note(
+      -1,
+      $requestBody->title,
+      $requestBody->body,
+      $userId
+    ));
+
     $this->respond(
       []
     );
@@ -88,11 +94,19 @@ class NotesClient
     }
 
     $requestBody = json_decode(file_get_contents('php://input'));
+    if (!isset($requestBody) || !Validator::objectFieldsHave($requestBody, ['body', 'title'])) {
+      abort(HttpResponse::BAD_REQUEST);
+    };
+
     $userId = $this->validateUser();
+    $note = $this->validateOwnership($noteId, $userId);
 
-    $this->validateOwnership($noteId, $userId);
-
-    $this->noteDao->update($requestBody->title ?? null, $requestBody->body ?? null, $noteId);
+    $this->noteDao->update(new Note(
+      $noteId,
+      $requestBody->title ?? $note->getTitle(),
+      $requestBody->body ?? $note->getBody(),
+      -1
+    ));
     $this->respondNoPayload();
   }
 

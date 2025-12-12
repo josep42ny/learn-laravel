@@ -32,37 +32,23 @@ class NoteDaoDbImpl implements NoteDao
     ]);
   }
 
-  public function store(string $title, string $body, int $userId): void
+  public function store(Note $note): void
   {
     $db = App::resolve(Database::class);
-    $db->query('insert into Note(title, body, userId) values (:title, :body, :id)', [
-      'title' => $title,
-      'body' => $body,
-      'id' => $userId
+    $db->query('insert into Note(title, body, userId) values (:title, :body, :userId)', [
+      'title' => $note->getTitle(),
+      'body' => $note->getBody(),
+      'userId' => $note->getUserId()
     ]);
   }
 
-  public function update(string | null $title, string | null $body, int $noteId): void
+  public function update(Note $note): void
   {
-    if (!isset($title) && !isset($body)) {
-      return;
-    }
-
     $db = App::resolve(Database::class);
-    if (isset($title) && !isset($body)) {
-      $db->query('update Note set body = :title where id = :id', ['title' => $title, 'id' => $noteId]);
-      return;
-    }
-
-    if (!isset($title) && isset($body)) {
-      $db->query('update Note set body = :body where id = :id', ['body' => $body, 'id' => $noteId]);
-      return;
-    }
-
     $db->query('update Note set title = :title, body = :body where id = :id', [
-      'title' => $title,
-      'body' => $body,
-      'id' => $noteId
+      'id' => $note->getId(),
+      'title' => $note->getTitle(),
+      'body' => $note->getBody()
     ]);
   }
 
