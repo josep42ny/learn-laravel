@@ -65,4 +65,12 @@ class UserDaoDbImpl implements UserDao
       'token' => $token
     ]);
   }
+
+  public function deleteAllTokens(int $userId): void
+  {
+    $db = App::resolve(Database::class);
+    $db->query('delete from Token where userId = :id', [
+      'id' => $userId
+    ]);
+  }
 }

@@ -34,12 +34,22 @@ class UsersClient
     $this->respond(['token' => $token]);
   }
 
-  public function deleteToken()
+  public function deleteCurrentToken()
   {
     $this->validateUser();
 
     $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
     $this->userService->deleteToken($token);
+
+    $this->respondNoPayload();
+  }
+
+  public function deleteAllTokens()
+  {
+    $this->validateUser();
+
+    $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
+    $this->userService->deleteAllTokens($token);
 
     $this->respondNoPayload();
   }

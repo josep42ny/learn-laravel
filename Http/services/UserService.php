@@ -42,7 +42,7 @@ class UserService
     $token = Jwt::encode(['sub' => $id, 'iat' => time()]);
 
     $DAYS_UNIX = 7 * 24 * 60 * 60;
-    $EXPIRY_DATE_UNIX = time() - $DAYS_UNIX;
+    $EXPIRY_DATE_UNIX = time() + $DAYS_UNIX;
     $this->userDao->addToken($id, $token, $EXPIRY_DATE_UNIX);
     return $token;
   }
@@ -56,6 +56,12 @@ class UserService
   public function deleteToken(string $token): void
   {
     $this->userDao->deleteToken($token);
+  }
+
+  public function deleteAllTokens(string $token): void
+  {
+    $userId = Jwt::decode($token)['sub'];
+    $this->userDao->deleteAllTokens($userId);
   }
 
   public function edit(int $userId, string | null $username, string | null $picture): void

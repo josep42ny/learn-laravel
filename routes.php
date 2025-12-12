@@ -26,5 +26,6 @@ $router->patch('/api/v1/notes/{id}', 'NotesClient', 'edit');
 $router->delete('/api/v1/notes/{id}', 'NotesClient', 'destroy');
 
 $router->post('/api/v1/users/auth', 'UsersClient', 'getToken');
-$router->delete('/api/v1/users/auth', 'UsersClient', 'deleteToken');
+$router->delete('/api/v1/users/auth', 'UsersClient', 'deleteCurrentToken');
+$router->delete('/api/v1/users/auth/all', 'UsersClient', 'deleteAllTokens');
 $router->patch('/api/v1/users', 'UsersClient', 'edit');
