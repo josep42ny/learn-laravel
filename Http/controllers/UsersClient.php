@@ -41,8 +41,7 @@ class UsersClient
     $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
     $this->userService->deleteToken($token);
 
-    http_response_code(HttpResponse::NO_CONTENT->value);
-    die();
+    $this->respondNoPayload();
   }
 
   public function edit(): void
@@ -57,7 +56,7 @@ class UsersClient
     $userId = $this->validateUser();
 
     $this->userService->edit($userId,  $requestBody->username, $requestBody->picture ?? null);
-    dd($this->userService->get($userId));
+    $this->respondNoPayload();
   }
 
   private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void
@@ -69,18 +68,24 @@ class UsersClient
     die();
   }
 
+  private function respondNoPayload(HttpResponse $statusCode = HttpResponse::NO_CONTENT): void
+  {
+    http_response_code($statusCode->value);
+    die();
+  }
+
   private function validateUser(): int
   {
     if (!array_key_exists('Authorization', getallheaders())) {
       abort(HttpResponse::UNAUTHORIZED);
     }
 
-    $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
+    $headerToken = str_replace('Bearer ', '', getallheaders()['Authorization']);
     $tokens = $this->userService->getAllTokens();
 
-    foreach ($tokens as $t) {
-      if ($t->getValue() == $token) {
-        return $this->userService->get($t->getSub())->getId();
+    foreach ($tokens as $token) {
+      if ($token->getValue() == $headerToken && $token->getExpiration() >= time()) {
+        return $this->userService->get($token->getSub())->getId();
       }
     }
 

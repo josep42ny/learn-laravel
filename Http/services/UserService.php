@@ -42,7 +42,7 @@ class UserService
     $token = Jwt::encode(['sub' => $id, 'iat' => time()]);
 
     $DAYS_UNIX = 7 * 24 * 60 * 60;
-    $EXPIRY_DATE_UNIX = time() + $DAYS_UNIX;
+    $EXPIRY_DATE_UNIX = time() - $DAYS_UNIX;
     $this->userDao->addToken($id, $token, $EXPIRY_DATE_UNIX);
     return $token;
   }
@@ -98,7 +98,8 @@ class UserService
     return new Token(
       $rawToken['value'],
       $token['sub'],
-      $token['iat']
+      $token['iat'],
+      $rawToken['expiration']
     );
   }
 }

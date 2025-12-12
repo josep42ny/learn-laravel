@@ -129,12 +129,12 @@ class NotesClient
       abort(HttpResponse::UNAUTHORIZED);
     }
 
-    $token = str_replace('Bearer ', '', getallheaders()['Authorization']);
+    $headerToken = str_replace('Bearer ', '', getallheaders()['Authorization']);
     $tokens = $this->userService->getAllTokens();
 
-    foreach ($tokens as $t) {
-      if ($t->getValue() == $token) {
-        return $this->userService->get($t->getSub())->getId();
+    foreach ($tokens as $token) {
+      if ($token->getValue() == $headerToken && $token->getExpiration() >= time()) {
+        return $this->userService->get($token->getSub())->getId();
       }
     }
 

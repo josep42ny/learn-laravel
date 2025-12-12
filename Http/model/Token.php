@@ -35,4 +35,13 @@ class Token
   {
     $this->iat = $iat;
   }
+
+  public function getExpiration(): int
+  {
+    return $this->expiration;
+  }
+  public function setExpiration($unixDate): void
+  {
+    $this->iat = $unixDate;
+  }
 }
