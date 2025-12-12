@@ -13,7 +13,7 @@ class Authenticator
 
     if ($user) {
       if (password_verify($password, $user['password'])) {
-        $this->login(['id' => $user['id'], 'email' => $email]);
+        $this->login(['id' => $user['id'], 'email' => $user['email'], 'picture' => $user['picture']]);
 
         return true;
       }
@@ -26,7 +26,8 @@ class Authenticator
   {
     Session::put('user', [
       'id' => $user['id'],
-      'email' => $user['email']
+      'email' => $user['email'],
+      'picture' => $user['picture']
     ]);
 
     session_regenerate_id(true);
