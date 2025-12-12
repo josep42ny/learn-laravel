@@ -28,13 +28,14 @@ class UserDaoDbImpl implements UserDao
     return $rawUser;
   }
 
-  public function update(int $id, string $email, string $token, string $password): void
+  public function update(int $id, string $email, string $username, string $picture, string $password): void
   {
     $db = App::resolve(Database::class);
-    $db->query('update User set email = :email, token = :token, password = :password where id = :id', [
+    $db->query('update User set email = :email, username = :username, picture = :picture, password = :password where id = :id', [
       'id' => $id,
       'email' => $email,
-      'token' => $token,
+      'username' => $username,
+      'picture' => $picture,
       'password' => $password
     ]);
   }

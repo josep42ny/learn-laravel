@@ -56,6 +56,11 @@ class UserService
     $this->userDao->deleteToken($token);
   }
 
+  public function edit(): void
+  {
+    //$this->userDao->update();
+  }
+
   private function userOf(mixed $obj): User
   {
     return new User(

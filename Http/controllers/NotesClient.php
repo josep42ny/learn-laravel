@@ -53,7 +53,7 @@ class NotesClient
   {
     $requestBody = json_decode(file_get_contents('php://input'));
 
-    if (!isset($requestBody) || !Validator::objectFields($requestBody, ['title', 'body'])) {
+    if (!isset($requestBody) || !Validator::objectFieldsAre($requestBody, ['title', 'body'])) {
       abort(HttpResponse::BAD_REQUEST);
     };
 

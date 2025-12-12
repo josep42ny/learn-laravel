@@ -8,7 +8,7 @@ class User
     private int $id,
     private string $email,
     private string $username,
-    private string $picture,
+    private string | null $picture,
     private string $password
   ) {}
 

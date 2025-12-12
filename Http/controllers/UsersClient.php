@@ -21,7 +21,7 @@ class UsersClient
   {
     $requestBody = json_decode(file_get_contents('php://input'));
 
-    if (!isset($requestBody) || !Validator::objectFields($requestBody, ['email', 'password'])) {
+    if (!isset($requestBody) || !Validator::objectFieldsAre($requestBody, ['email', 'password'])) {
       abort(HttpResponse::BAD_REQUEST);
     };
 
@@ -49,11 +49,15 @@ class UsersClient
   {
     $requestBody = json_decode(file_get_contents('php://input'));
 
-    if (!isset($requestBody) || !Validator::objectFields($requestBody, ['username', 'picture'])) {
+
+    if (!isset($requestBody) || !Validator::objectFieldsHave($requestBody, ['username', 'picture'])) {
       abort(HttpResponse::BAD_REQUEST);
     };
+    dd($requestBody);
 
     $userId = $this->validateUser();
+
+    $this->userService->edit([]);
   }
 
   private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void

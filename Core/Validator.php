@@ -26,7 +26,7 @@ class Validator
     return true;
   }
 
-  public static function objectFields(object $object, array $fields): bool
+  public static function objectFieldsAre(object $object, array $fields): bool
   {
     foreach ($fields as $field) {
       if (!isset($object->$field)) {
@@ -35,5 +35,16 @@ class Validator
     }
 
     return true;
+  }
+
+  public static function objectFieldsHave(object $object, array $fields): bool
+  {
+    foreach ($fields as $field) {
+      if (property_exists($object, $field)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
