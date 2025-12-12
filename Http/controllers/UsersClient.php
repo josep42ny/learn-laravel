@@ -53,11 +53,11 @@ class UsersClient
     if (!isset($requestBody) || !Validator::objectFieldsHave($requestBody, ['username', 'picture'])) {
       abort(HttpResponse::BAD_REQUEST);
     };
-    dd($requestBody);
 
     $userId = $this->validateUser();
 
-    $this->userService->edit([]);
+    $this->userService->edit($userId,  $requestBody->username, $requestBody->picture ?? null);
+    dd($this->userService->get($userId));
   }
 
   private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void

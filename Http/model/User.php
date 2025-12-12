@@ -36,11 +36,11 @@ class User
   {
     $this->username = $username;
   }
-  public function getPicture(): string
+  public function getPicture(): string | null
   {
     return $this->picture;
   }
-  public function setPicture(string $picture): void
+  public function setPicture(string | null $picture): void
   {
     $this->picture = $picture;
   }

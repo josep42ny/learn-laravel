@@ -56,10 +56,27 @@ class UserService
     $this->userDao->deleteToken($token);
   }
 
-  public function edit(): void
+  public function edit(int $userId, string | null $username, string | null $picture): void
   {
-    //$this->userDao->update();
+    $user = $this->get($userId);
+
+    $user->setUsername($username ?? $user->getUsername());
+    $user->setPicture($picture ?? $user->getPicture());
+
+    $this->userDao->update($user);
   }
+
+  // public function edit(int $userId, array $fields): void
+  // {
+  //   $user = $this->get($userId);
+  //   $userFields = get_object_vars($user);
+  //   foreach ($fields as $field) {
+  //     if (array_key_exists($userFields, $field)) {
+
+  //     }
+  //   }
+  //   //$this->userDao->update();
+  // }
 
   private function userOf(mixed $obj): User
   {

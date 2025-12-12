@@ -4,6 +4,7 @@ namespace Http\dao;
 
 use Core\App;
 use Core\Database;
+use Http\model\User;
 
 class UserDaoDbImpl implements UserDao
 {
@@ -28,15 +29,15 @@ class UserDaoDbImpl implements UserDao
     return $rawUser;
   }
 
-  public function update(int $id, string $email, string $username, string $picture, string $password): void
+  public function update(User $user): void
   {
     $db = App::resolve(Database::class);
     $db->query('update User set email = :email, username = :username, picture = :picture, password = :password where id = :id', [
-      'id' => $id,
-      'email' => $email,
-      'username' => $username,
-      'picture' => $picture,
-      'password' => $password
+      'id' => $user->getId(),
+      'email' => $user->getEmail(),
+      'username' => $user->getUsername(),
+      'picture' => $user->getPicture(),
+      'password' => $user->getPassword()
     ]);
   }
 
