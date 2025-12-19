@@ -6,8 +6,12 @@ class Api
 {
   public function handle()
   {
-    if (!isset($_SESSION['user'])) {
-      redirect('/login');
+    $requestingJson = array_key_exists('Content-Type', getallheaders()) && getallheaders()['Content-Type'] == 'application/json';
+
+    if (!$requestingJson) {
+      redirect('/');
     }
+
+    header('Content-Type: application/json');
   }
 }

@@ -5,6 +5,7 @@ use Core\Authenticator;
 use Core\Database;
 use Core\Jwt;
 use Core\Validator;
+use Core\View;
 
 $email = $_POST['email'];
 $password = $_POST['password'];
@@ -19,7 +20,7 @@ if (!Validator::string($password, 8, 255)) {
 }
 
 if (!empty($errors)) {
-  return view('registration/create.view.php', [
+  return View::html('registration/create.view.php', [
     'errors' => $errors
   ]);
 }

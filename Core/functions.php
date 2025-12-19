@@ -35,12 +35,6 @@ function baseUrl($path): string
   return BASE_PATH . $path;
 }
 
-function view($path, $attributes = []): void
-{
-  extract($attributes);
-  require baseUrl('views/' . $path);
-}
-
 function redirect($path): void
 {
   header("location: {$path}");

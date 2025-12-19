@@ -1,3 +1,5 @@
 <?php
 
-view('registration/create.view.php');
+use Core\View;
+
+View::html('registration/create.view.php');

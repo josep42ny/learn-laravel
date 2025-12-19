@@ -5,6 +5,7 @@ namespace Http\Controllers;
 use Core\Authenticator;
 use Core\HttpResponse;
 use Core\Validator;
+use Core\View;
 use Http\model\User;
 use Http\services\UserService;
 
@@ -71,10 +72,11 @@ class UsersClient
 
   private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void
   {
+    //header('Content-Type: application/json');
     http_response_code($statusCode->value);
 
     $json = json_encode($data);
-    view('api/json.php', ['json' => $json]);
+    View::html('api/json.php', ['json' => $json]);
     die();
   }
 

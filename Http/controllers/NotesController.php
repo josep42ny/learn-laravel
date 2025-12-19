@@ -4,9 +4,11 @@ namespace Http\controllers;
 
 use Core\Session;
 use Core\Validator;
+use Core\View;
 use Http\dao\NoteDao;
 use Http\dao\NoteDaoFactory;
 use Http\model\Note;
+use Http\model\User;
 
 class NotesController
 {
@@ -18,7 +20,7 @@ class NotesController
   }
   public function create(): void
   {
-    view('notes/create.view.php', [
+    View::html('notes/create.view.php', [
       'heading' => 'Create a note',
       'errors' => [],
     ]);
@@ -45,7 +47,7 @@ class NotesController
 
     authorise($note->getUserId() === $authorisedUser);
 
-    view('notes/edit.view.php', [
+    View::html('notes/edit.view.php', [
       'heading' => 'Edit note',
       'errors' => [],
       'note' => $note,
@@ -56,7 +58,8 @@ class NotesController
   {
     $authorisedUser = Session::get('user')['id'];
     $notes = $this->service->getAll($authorisedUser);
-    view('notes/index.view.php', [
+
+    View::html('notes/index.view.php', [
       'heading' => 'My Notes',
       'notes' => $notes,
     ]);
@@ -71,7 +74,7 @@ class NotesController
 
     authorise($note->getUserId() === $authorisedUser);
 
-    view('notes/show.view.php', [
+    View::html('notes/show.view.php', [
       'heading' => 'Note',
       'note' => $note,
     ]);
@@ -102,7 +105,7 @@ class NotesController
     }
 
     if ($hasError) {
-      view('notes/create.view.php', [
+      View::html('notes/create.view.php', [
         'heading' => 'Create a note',
         'errors' => $errors,
       ]);
@@ -142,7 +145,7 @@ class NotesController
     }
 
     if ($hasError) {
-      view('notes/edit.view.php', [
+      View::html('notes/edit.view.php', [
         'heading' => 'Edit note',
         'errors' => $errors,
         'note' => $note,

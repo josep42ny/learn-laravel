@@ -4,6 +4,7 @@ namespace Http\controllers;
 
 use Core\HttpResponse;
 use Core\Validator;
+use Core\View;
 use Http\dao\NoteDao;
 use Http\dao\NoteDaoFactory;
 use Http\model\Note;
@@ -95,7 +96,7 @@ class NotesClient
 
     $requestBody = json_decode(file_get_contents('php://input'));
     if (!isset($requestBody) || !Validator::objectFieldsHave($requestBody, ['body', 'title'])) {
-      abort(HttpResponse::BAD_REQUEST);
+      View::abortJson(HttpResponse::BAD_REQUEST);
     };
 
     $userId = $this->validateUser();
@@ -112,11 +113,10 @@ class NotesClient
 
   private function respond(array $data, HttpResponse $statusCode = HttpResponse::OK): void
   {
-    header('Content-Type: application/json');
     http_response_code($statusCode->value);
 
     $json = json_encode($data);
-    view('api/json.php', ['json' => $json]);
+    View::html('api/json.php', ['json' => $json]);
     die();
   }
 
@@ -152,6 +152,6 @@ class NotesClient
       }
     }
 
-    abort(HttpResponse::FORBIDDEN);
+    View::abortJson(HttpResponse::FORBIDDEN);
   }
 }
