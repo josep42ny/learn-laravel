@@ -1,28 +1,20 @@
 <?php
 
-use Core\Session;
-use Core\ValidationException;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 
-const BASE_PATH = __DIR__ . '/../';
-require BASE_PATH . 'vendor/autoload.php';
-require BASE_PATH . 'Core/functions.php';
-require baseUrl('bootstrap.php');
+define('LARAVEL_START', microtime(true));
 
-session_start();
-
-$router = new Core\Router();
-$routes = require baseUrl('routes.php');
-
-$url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
-
-try {
-  $router->route($url, $method);
-} catch (ValidationException $e) {
-  Session::flash('errors', $e->errors);
-  Session::flash('old', $e->old);
-
-  return redirect($router->previousUrl());
+// Determine if the application is in maintenance mode...
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
 }
 
-Session::unflash();
+// Register the Composer autoloader...
+require __DIR__.'/../vendor/autoload.php';
+
+// Bootstrap Laravel and handle the request...
+/** @var Application $app */
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+$app->handleRequest(Request::capture());
