@@ -8,6 +8,7 @@ Route::get('/', function () {
 });
 
 Route::get('/jobs', function () {
+    //dd(Job::all());
     return view('jobs', ['jobs' => Job::all()]);
 });
 
